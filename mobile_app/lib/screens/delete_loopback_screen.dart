@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/utils/utils.dart';
+
+import '../services/api_service.dart';
 
 class DeleteLoopbackScreen extends StatefulWidget {
   static const routeName = deleteloopbackRouteName;
@@ -10,6 +13,9 @@ class DeleteLoopbackScreen extends StatefulWidget {
 }
 
 class _DeleteLoopbackScreenState extends State<DeleteLoopbackScreen> {
+  final TextEditingController _idController = TextEditingController(text: '11');
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,40 +57,79 @@ class _DeleteLoopbackScreenState extends State<DeleteLoopbackScreen> {
         backgroundColor: Colors.transparent, // Fondo transparente
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Loopback ID',
-              style: TextStyle(fontSize: 30),
-            ),
-            const SizedBox(height: 50),
-            const SizedBox(
-              width: 500,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Enter number...',
-                  border: OutlineInputBorder(),
-                ),
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'Loopback ID',
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  const SizedBox(height: 50),
+                  SizedBox(
+                    width: 500,
+                    child: TextField(
+                      controller: _idController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter number...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 200),
+                  SizedBox(
+                    width: 300,
+                    height: 100,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        submit(context);
+                      },
+                      child: const Text(
+                        'SEND',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 200),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(customGetconfRouteName);
-                },
-                child: const Text(
-                  'SEND',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
+  }
+
+  void setIsLoadingTrue() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  void setIsLoadingFalse() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void submit(BuildContext context) async {
+    try {
+      setIsLoadingTrue();
+      var response = await deleteLoopback(
+        int.parse(_idController.text),
+      );
+      setIsLoadingFalse();
+
+      if (response.statusCode == 200) {
+        if (context.mounted) {
+          showAlertDialog(context, 'Success', response.body, 'Aceptar');
+        }
+      } else {
+        if (context.mounted) {
+          showAlertDialog(context, 'Error',
+              'Ha ocurrido un error: ${response.body}', 'Aceptar');
+        }
+      }
+    } catch (e) {
+      showAlertDialog(
+          context, 'Error', 'Ha ocurrido un error: ${e}', 'Aceptar');
+    }
   }
 }
