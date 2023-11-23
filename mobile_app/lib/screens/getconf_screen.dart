@@ -54,46 +54,103 @@ class _GetconfScreenState extends State<GetconfScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'GET_CONF',
-                  style: TextStyle(fontSize: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'GET_CONF',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Get capabilities',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(customGetconfRouteName);
+                        },
+                        child: const Text(
+                          'Custom',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Get capabilities',
-                  style: TextStyle(fontSize: 25),
+                const SizedBox(
+                  width: 20,
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(customGetconfRouteName);
-                },
-                child: const Text(
-                  'Custom',
-                  style: TextStyle(fontSize: 25),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Get schema',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Get serial',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          //Navigator.of(context)
+                          //    .pushNamed(customGetconfRouteName);
+                        },
+                        child: const Text(
+                          'Get loopbacks',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
+              ],
             ),
             const Text(
               'RESPONSE',

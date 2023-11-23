@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/constants.dart';
 
-class EditconfScreen extends StatefulWidget {
-  static const routeName = editconfRouteName;
-  const EditconfScreen({super.key});
+class DeleteLoopbackScreen extends StatefulWidget {
+  static const routeName = deleteloopbackRouteName;
+  const DeleteLoopbackScreen({super.key});
 
   @override
-  State<EditconfScreen> createState() => _EditconfScreenState();
+  State<DeleteLoopbackScreen> createState() => _DeleteLoopbackScreenState();
 }
 
-class _EditconfScreenState extends State<EditconfScreen> {
+class _DeleteLoopbackScreenState extends State<DeleteLoopbackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,14 +30,14 @@ class _EditconfScreenState extends State<EditconfScreen> {
                 Navigator.pop(context);
               },
             ),
-            SizedBox(width: 210),
-            Column(
+            const SizedBox(width: 130),
+            const Column(
               children: [
                 SizedBox(
                   height: 50,
                 ),
-                const Text(
-                  'EDIT_CONF',
+                Text(
+                  'DELETE LOOPBACK',
                   style: TextStyle(
                       fontSize: 45,
                       fontWeight: FontWeight.bold,
@@ -54,61 +54,34 @@ class _EditconfScreenState extends State<EditconfScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            const Text(
+              'Loopback ID',
+              style: TextStyle(fontSize: 30),
+            ),
+            const SizedBox(height: 50),
+            const SizedBox(
+              width: 500,
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter number...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 200),
             SizedBox(
               width: 300,
               height: 100,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(copyconfRouteName);
+                  Navigator.of(context).pushNamed(customGetconfRouteName);
                 },
                 child: const Text(
-                  'Copy Config',
+                  'SEND',
                   style: TextStyle(fontSize: 25),
                 ),
               ),
             ),
-            const SizedBox(height: 50),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(addloopbackRouteName);
-                },
-                child: const Text(
-                  'Add loopback',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(deleteloopbackRouteName);
-                },
-                child: const Text(
-                  'Delete loopback',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
-            SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(customEditconfRouteName);
-                },
-                child: const Text(
-                  'Custom',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-            )
           ],
         ),
       ),

@@ -6,3 +6,5 @@ const editconfRouteName = '/editconfScreen';
 const customGetconfRouteName = '/customGetconfScreen';
 const customEditconfRouteName = '/customEditconfScreen';
 const copyconfRouteName = '/copyconfScreen';
+const addloopbackRouteName = '/addloopbackScreen';
+const deleteloopbackRouteName = '/deleteloopbackScreen';
