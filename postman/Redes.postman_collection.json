@@ -320,6 +320,70 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "add loopback",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"loopback_number\": 11,\r\n    \"loopback_ip\": \"0.0.0.0/32\",\r\n    \"description\": \"Another way to use postman for Redes \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/add_loopback/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"add_loopback",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "copy config",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"source\": \"running\",\r\n  \"target\": \"startup\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/copy_config/0",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"copy_config",
+						"0"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

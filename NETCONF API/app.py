@@ -176,22 +176,67 @@ def edit_config(session_id):
             config_data = data.get('config')
             target = data.get('target', 'running')
 
-            nc_client.edit_config(config_data, target=target)
+            netconf_response = nc_client.edit_config(config_data, target=target)
 
-            return jsonify({'message': f'Configuration edited successfully for target: {target}'}), 200
+            return jsonify({'message': f'Configuration edited successfully for target: {target}', 'netconf_response': str(netconf_response)}), 200
 
         else:
             return jsonify({'error': f'Session with ID {session_id} not found'}), 404
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/add_loopback/<int:session_id>', methods=['PUT'])
+def add_loopback(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
 
-# @app.route('/deleteL', methods=['POST'])
-# def deleteLoopback():
-#     name = request.form['name']
-#     if name in items:
-#         items.remove(name)
-#     return redirect('/')
+            # Expected JSON data:
+            {
+              "loopback_number": 1,
+              "loopback_ip": "10.0.0.1/32",
+              "description": "Loopback interface 1"
+            }
+            data = request.get_json()
+            loopback_number = data.get('loopback_number')
+            loopback_ip = data.get('loopback_ip')
+            description = data.get('description')
+
+            netconf_response = nc_client.add_loopback(loopback_number, loopback_ip, description)
+
+            return jsonify({'message': 'Loopback added successfully', 'netconf_response': str(netconf_response)}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/copy_config/<int:session_id>', methods=['PUT'])
+def copy_config(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
+
+            # Expected JSON data:
+            # {
+            #   "source": "running",
+            #   "target": "startup"
+            # }
+            data = request.get_json()
+            source = data.get('source')
+            target = data.get('target')
+
+            nc_client.copy_config(source=source, target=target)
+
+            return jsonify({'message': f'Configuration copied from {source} to {target} successfully'}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

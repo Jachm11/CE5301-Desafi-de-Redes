@@ -188,15 +188,19 @@ class NetconfClient:
 
     # ------------<edit-config>--------------
 
-    def edit_config(self, config_data, target='running') -> None:
+    def edit_config(self, config_data, target='running') -> str:
         try:
             # Issue a NETCONF <edit-config> operation
-            self.device.edit_config(config_data,target=target)
+            netconf_response = self.device.edit_config(config_data,target=target)
 
             print(f"Configuration edited successfully for target: {target}")
 
+            return netconf_response
+
         except Exception as e:
-            print(f"Failed to edit configuration. Error: {str(e)}")
+            error_str = f"Failed to edit configuration. Error: {str(e)}"
+            print(error_str)
+            return error_str
 
     def add_loopback(self, loopback_number:int, loopback_ip, description) -> str:
         """
