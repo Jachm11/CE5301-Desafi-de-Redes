@@ -3,14 +3,15 @@ from pprint import pprint
 import xmltodict
 import xml.dom.minidom
 
-m = manager.connect(host='sandbox-iosxr-1.cisco.com', port='830', username='admin',
+m = manager.connect(host='sandbox-iosxr-1.cisco.com', 
+                    port='830', username='admin',
                     password='C1sco12345', hostkey_verify=False)
 
 print(m.connected)
 
-#for capability in m.server_capabilities:
-#   print('*'* 50)
-#   print(capability)
+for capability in m.server_capabilities:
+   print('*'* 50)
+   print(capability)
 
 netconf_filter = """
 <filter>
