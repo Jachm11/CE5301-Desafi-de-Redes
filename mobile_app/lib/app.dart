@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/screens/add_loopback_screen.dart';
 import 'package:mobile_app/screens/copyconf_screen.dart';
 import 'package:mobile_app/screens/custom_editconf_screen.dart';
 import 'package:mobile_app/screens/custom_getconf_screen.dart';
+import 'package:mobile_app/screens/delete_loopback_screen.dart';
 import 'package:mobile_app/screens/editconf_screen.dart';
 import 'package:mobile_app/screens/fail_screen.dart';
 import 'package:mobile_app/screens/getconf_screen.dart';
@@ -29,6 +31,10 @@ class MyApp extends StatelessWidget {
             const CustomEditconfScreen(),
         CopyconfScreen.routeName: (BuildContext context) =>
             const CopyconfScreen(),
+        AddLoopbackScreen.routeName: (BuildContext context) =>
+            const AddLoopbackScreen(),
+        DeleteLoopbackScreen.routeName: (BuildContext context) =>
+            const DeleteLoopbackScreen(),
       },
     );
   }
