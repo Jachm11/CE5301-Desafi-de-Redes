@@ -11,7 +11,7 @@ class NetconfClient:
 
     # ------------Connection methods--------------
 
-    def connect(self) -> None:
+    def connect(self) -> bool:
         try:
             # Establish a NETCONF connection
             self.device = manager.connect(
@@ -25,13 +25,20 @@ class NetconfClient:
                 allow_agent=False
             )
             print("Connected to the device.")
+            return True
+        
         except Exception as e:
             print(f"Failed to connect to the device. Error: {str(e)}")
+            return False
 
-    def disconnect(self) -> None:
+
+    def disconnect(self) -> bool:
         if self.device:
             self.device.close_session()
             print("Disconnected from the device.")
+            return True
+        else:
+            return False
 
     # ------------<get-config>--------------
 
@@ -49,7 +56,9 @@ class NetconfClient:
             return config_data
 
         except Exception as e:
-            print(f"Failed to retrieve configuration. Error: {str(e)}")
+            error_str = f"Failed to retrieve configuration. Error: {str(e)}"
+            print(error_str)
+            raise ValueError(error_str)
 
     def get_capabilities(self, save_to_file=False, file_name='capabilities.txt') -> dict:
         if self.device:
