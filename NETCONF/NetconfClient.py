@@ -17,7 +17,7 @@ class NetconfClient:
                 port=self.port,
                 username=self.username,
                 password=self.password,
-                device_params={'name': 'iosxr'},
+                device_params={'name': 'nexus'},
                 timeout=10,
                 hostkey_verify=False
             )
@@ -30,15 +30,30 @@ class NetconfClient:
             self.device.close_session()
             print("Disconnected from the device.")
 
-    def get_config(self, source='running', filter_str=None) -> str:
+    def get_config(self, source='running', filter_str=None, save_to_file=False, file_name='config.xml') -> str:
         try:
             # Issue a NETCONF <get-config> operation
             config = self.device.get_config(source=source, filter=filter_str)
 
-            return config.data_xml
+            config_data = config.data_xml
+
+            # Save to file if the flag is set
+            if save_to_file:
+                self.save_to_file(file_name, config_data)
+
+            return config_data
 
         except Exception as e:
             print(f"Failed to retrieve configuration. Error: {str(e)}")
+
+    def save_to_file(self, file_name, data):
+        try:
+            with open(file_name, 'w') as file:
+                file.write(data)
+            print(f"Configuration saved to {file_name}")
+
+        except Exception as e:
+            print(f"Failed to save configuration to {file_name}. Error: {str(e)}")
 
     def get_capabilities(self) -> dict:
         if self.device:
@@ -53,7 +68,7 @@ class NetconfClient:
     def edit_config(self, config_data, target='running') -> None:
         try:
             # Issue a NETCONF <edit-config> operation
-            self.device.edit_config(target=target, config=config_data)
+            self.device.edit_config(config_data,target=target)
 
             print(f"Configuration edited successfully for target: {target}")
 
@@ -71,33 +86,106 @@ class NetconfClient:
         except Exception as e:
             print(f"Failed to copy configuration. Error: {str(e)}")
 
+    def add_interface(self, interface_name, description):
+        try:
+            # Prepare the XML data for the <edit-config> operation
+            edit_data = f"""
+                <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+                    <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
+                        <interface-configuration>
+                            <active>act</active>
+                            <interface-name>{interface_name}</name>
+                            <description>{description}</description>
+                        </interface>
+                    </interface-configurations>
+                </config>
+            """
+
+            # Issue a NETCONF <edit-config> operation
+            self.device.edit_config(target='running', config=edit_data)
+
+            print(f"Interface '{interface_name}' added successfully.")
+
+        except Exception as e:
+            print(f"Failed to add interface. Error: {str(e)}")
+
 
 # Example usage:
 if __name__ == "__main__":
 
+    # # Replace with your device's details
+    # netconf_instance = NetconfClient(
+    #     host="sandbox-iosxr-1.cisco.com",
+    #     port=830,  # Default NETCONF port
+    #     username="admin",
+    #     password="C1sco12345",
+    # )
+
     # Replace with your device's details
     netconf_instance = NetconfClient(
-        host="sandbox-iosxr-1.cisco.com",
+        host="sbx-nxos-mgmt.cisco.com",
         port=830,  # Default NETCONF port
         username="admin",
-        password="C1sco12345",
+        password="Admin_1234!"
     )
 
     netconf_instance.connect()
 
     # Perform NETCONF operations here
 
-    # netconf_instance.get_config()
+    filter_str = f"""
+<filter xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg"/>
+</filter>
+"""
+    edit_data = f"""
+<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
+        <interface-configuration>
+            <active>act</active>
+            <interface-name>JACHM</interface-name>
+            <description>test</description>
+        </interface-configuration>
+    </interface-configurations>
+</config>
+"""
 
-    # netconf_instance.edit_config(target='running', config_data=edit_data)
+    edit_data = f"""
+<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+      <interface>
+         <name xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">GigabitEthernet3</name>
+         <description>This is a test</description>
+         <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+         <enabled>false</enabled>
+         <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+            <address>
+               <ip>87.2.3.4</ip>
+               <netmask>255.255.255.0</netmask>
+            </address>
+         </ipv4>
+         <ipv6 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip"/>
+      </interface>
+   </interfaces>
+</config>
+"""
+
+    #print(netconf_instance.get_config(save_to_file=True,filter_str=filter_str))
+    #print(netconf_instance.get_config(save_to_file=True))
+
+    
+    # netconf_instance.edit_config(edit_data, target='running')
+    #print(netconf_instance.get_config(save_to_file=True,filter_str=filter_str))
+
 
     # netconf_instance.show_interfaces()
 
-    # print(netconf_instance.capabilities)
-    # for capability in netconf_instance.get_capabilities():
-    #     print('*'* 50)
-    #     print(capability)
+    for capability in netconf_instance.get_capabilities():
+        print('*'* 50)
+        print(capability)
 
-    netconf_instance.copy_config('running','cadidate')
+    # netconf_instance.add_interface("JACHM","test")
+
+    # netconf_instance.copy_config('running','cadidate')
 
     netconf_instance.disconnect()
