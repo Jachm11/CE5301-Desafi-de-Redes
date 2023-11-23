@@ -111,20 +111,38 @@ def get_schema(session_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/get_serial/<int:session_id>', methods=['GET'])
+def get_serial(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
 
-# @app.route('/serial')
-# def getSerial():
-#     serial_number = """
-#     <System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device">
-#     <serial/>
-#     </System>"""
-#     m = conexionConstante()
-#     netconf_response = m.get(('subtree', serial_number))
-#         # Parse the XML and print the data
-#     xml_data = netconf_response.data_ele
-#     serial =  xml_data.find(".//{http://cisco.com/ns/yang/cisco-nx-os-device}serial").text
-#     print(serial)
-#     return serial
+            serial_number = nc_client.get_serial()
+
+            return jsonify({'serial_number': serial_number}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/get_loopbacks/<int:session_id>', methods=['GET'])
+def get_loopbacks(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
+
+            loopbacks_info = nc_client.get_loopbacks()
+
+            return jsonify({'loopbacks_info': loopbacks_info}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # @app.route('/loopback')
 # def getLoopback():

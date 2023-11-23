@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "login",
+			"name": "connect iosxr",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -21,7 +21,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/login",
+					"raw": "http://127.0.0.1:5000/connect",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -31,7 +31,38 @@
 					],
 					"port": "5000",
 					"path": [
-						"login"
+						"connect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "connect nxos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"host\": \"sbx-nxos-mgmt.cisco.com\",\r\n    \"port\": 830,\r\n    \"username\": \"admin\",\r\n    \"password\": \"Admin_1234!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/connect",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"connect"
 					]
 				}
 			},
@@ -113,6 +144,146 @@
 					"path": [
 						"get_config",
 						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get capabilities",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<filter xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\"> \r\n    <interface-configurations xmlns=\"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\"/> \r\n</filter>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_capabilities/0",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_capabilities",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get schema",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"schema\": \"Cisco-NX-OS-device\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_schema/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_schema",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get serial number",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"schema\": \"Cisco-NX-OS-device\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_serial/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_serial",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get loopbacks",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"schema\": \"Cisco-NX-OS-device\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_loopbacks/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_loopbacks",
+						"1"
 					]
 				}
 			},
