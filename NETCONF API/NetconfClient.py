@@ -343,7 +343,7 @@ if __name__ == "__main__":
 
     # print(netconf_instance.get_serial())
 
-    print(netconf_instance.get_loopbacks())
+    # print(netconf_instance.get_loopbacks())
 
     # schema = 'Cisco-NX-OS-device' 
     # print(netconf_instance.get_schema(schema,save_to_file=True))
