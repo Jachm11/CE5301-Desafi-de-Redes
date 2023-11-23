@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/services/api_service.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = homeScreenRouteName;
@@ -10,7 +12,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool connectState = true;
+  final TextEditingController _usernameController =
+      TextEditingController(text: 'admin');
+  final TextEditingController _passwordController =
+      TextEditingController(text: 'Admin_1234!');
+  final TextEditingController _hostController =
+      TextEditingController(text: "sbx-nxos-mgmt.cisco.com");
+  final TextEditingController _portController =
+      TextEditingController(text: '830');
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,75 +47,115 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent, // Fondo transparente
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            const Text(
-              'HOST',
-              style: TextStyle(fontSize: 30),
-            ),
-            const SizedBox(
-                width: 500,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter text...',
-                    border: OutlineInputBorder(),
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  const Text(
+                    'HOST',
+                    style: TextStyle(fontSize: 30),
                   ),
-                )),
-            const Text(
-              'PORT',
-              style: TextStyle(fontSize: 30),
-            ),
-            const SizedBox(
-                width: 500,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter text...',
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                      width: 500,
+                      child: TextField(
+                        controller: _hostController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter text...',
+                          border: OutlineInputBorder(),
+                        ),
+                      )),
+                  const Text(
+                    'PORT',
+                    style: TextStyle(fontSize: 30),
                   ),
-                )),
-            const Text(
-              'USERNAME',
-              style: TextStyle(fontSize: 30),
-            ),
-            const SizedBox(
-                width: 500,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter text...',
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                      width: 500,
+                      child: TextField(
+                        controller: _portController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter text...',
+                          border: OutlineInputBorder(),
+                        ),
+                      )),
+                  const Text(
+                    'USERNAME',
+                    style: TextStyle(fontSize: 30),
                   ),
-                )),
-            const Text(
-              'PASSWORD',
-              style: TextStyle(fontSize: 30),
-            ),
-            const SizedBox(
-                width: 500,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter text...',
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                      width: 500,
+                      child: TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter text...',
+                          border: OutlineInputBorder(),
+                        ),
+                      )),
+                  const Text(
+                    'PASSWORD',
+                    style: TextStyle(fontSize: 30),
                   ),
-                )),
-            SizedBox(
-                width: 300,
-                height: 100,
-                child: ElevatedButton(
-                    onPressed: () {
-                      if (connectState) {
-                        Navigator.of(context).pushNamed(okScreenRouteName);
-                      } else {
-                        Navigator.of(context).pushNamed(failScreenRouteName);
-                      }
-                    },
-                    child: const Text(
-                      'CONNECT',
-                      style: TextStyle(fontSize: 25),
-                    )))
-          ],
-        ),
+                  SizedBox(
+                      width: 500,
+                      child: TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter text...',
+                          border: OutlineInputBorder(),
+                        ),
+                      )),
+                  SizedBox(
+                      width: 300,
+                      height: 100,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            submitLogin(
+                                context,
+                                _usernameController.text,
+                                _passwordController.text,
+                                _hostController.text,
+                                int.parse(_portController.text));
+                          },
+                          child: const Text(
+                            'CONNECT',
+                            style: TextStyle(fontSize: 25),
+                          )))
+                ],
+              ),
       ),
     );
+  }
+
+  void setIsLoadingTrue() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  void setIsLoadingFalse() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void submitLogin(BuildContext context, String username, String password,
+      String host, int port) async {
+    try {
+      setIsLoadingTrue();
+      var response = await postLogin(username, password, host, port);
+      setIsLoadingFalse();
+
+      if (response.statusCode == 200) {
+        if (context.mounted) {
+          Navigator.of(context).pushNamed(okScreenRouteName);
+        }
+      } else {
+        if (context.mounted) {
+          Navigator.of(context).pushNamed(failScreenRouteName);
+        }
+      }
+    } catch (e) {
+      print("error: $e");
+    }
   }
 }
