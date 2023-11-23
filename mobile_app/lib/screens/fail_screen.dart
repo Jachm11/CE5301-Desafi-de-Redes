@@ -73,7 +73,9 @@ class _FailScreenState extends State<FailScreen> {
                 width: 300,
                 height: 100,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     child: const Text(
                       'Reintentar',
                       style: TextStyle(fontSize: 25),
