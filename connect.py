@@ -13,9 +13,9 @@ m = manager.connect(
 
 print(m.connected)
 
-#for capability in m.server_capabilities:
-#   print('*'* 50)
-#   print(capability)
+for capability in m.server_capabilities:
+   print('*'* 50)
+   print(capability)
 
 netconf_filter = """
 <filter>
