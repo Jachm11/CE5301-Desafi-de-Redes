@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../managers/shared_local_store.dart';
+
 Future<http.Response> postLogin(
     String username, String password, String host, int port) async {
   final Map<String, dynamic> data = {
@@ -15,6 +17,16 @@ Future<http.Response> postLogin(
 
   var response = await http.post(Uri.parse('http://127.0.0.1:5000/connect'),
       headers: headers, body: json.encode(data));
+
+  return response;
+}
+
+Future<http.Response> postDisconnect() async {
+  int sessionId = await SharedLocalStore.getSessionId();
+
+  var response = await http.post(
+    Uri.parse('http://127.0.0.1:5000/disconnect/${sessionId}'),
+  );
 
   return response;
 }

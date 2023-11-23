@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_app/constants.dart';
+import 'package:mobile_app/managers/shared_local_store.dart';
 import 'package:mobile_app/services/api_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -147,6 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (response.statusCode == 200) {
         if (context.mounted) {
+          var data = jsonDecode(response.body);
+          SharedLocalStore.setSessionId(data['session_id']);
           Navigator.of(context).pushNamed(okScreenRouteName);
         }
       } else {
