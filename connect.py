@@ -3,9 +3,13 @@ from pprint import pprint
 import xmltodict
 import xml.dom.minidom
 
-m = manager.connect(host='sandbox-iosxr-1.cisco.com', 
-                    port='830', username='admin',
-                    password='C1sco12345', hostkey_verify=False)
+m = manager.connect(
+                  host='sandbox-iosxr-1.cisco.com', 
+                  port='830', 
+                  username='admin',
+                  password='C1sco12345', 
+                  hostkey_verify=False
+)
 
 print(m.connected)
 
@@ -37,7 +41,5 @@ print(f'Interface name: { interface["name"]["#text"] }')
 print(f'Interface description: { interface["description"] }')
 print(f'Interface IP address: {  interface["ipv4"]["address"]["ip"] }')
 print(f'Interface IP netmask: {  interface["ipv4"]["address"]["netmask"] }') """
-
-
 
 m.close_session()
