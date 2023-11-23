@@ -237,6 +237,30 @@ def copy_config(session_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+@app.route('/delete_loopback/<int:session_id>', methods=['DELETE'])
+def delete_loopback(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
+
+            # Expected JSON data:
+            # {
+            #   "loopback_number": 1
+            # }
+            data = request.get_json()
+            loopback_number = data.get('loopback_number')
+
+            netconf_response = nc_client.delete_loopback(loopback_number)
+
+            return jsonify({'message': f'Loopback {loopback_number} deleted successfully', 'netconf_response': str(netconf_response)}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

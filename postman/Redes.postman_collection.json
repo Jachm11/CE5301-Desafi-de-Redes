@@ -384,6 +384,38 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "delete loopback",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"loopback_number\": 11\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/delete_loopback/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"delete_loopback",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
