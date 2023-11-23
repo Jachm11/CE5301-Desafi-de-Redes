@@ -155,20 +155,17 @@ class NetconfClient:
             # Create a list with single object
             loopbacks = [loopbacks]
         
-        response = ""
+        loopbacks_info = []
 
         for loopback in loopbacks:
+            loopback_info = {
+                'interface_id': loopback["id"],
+                'admin_state': loopback["adminSt"],
+                'oper_state': loopback["lbrtdif-items"]["operSt"],
+                'description': loopback.get("descr", ""),
+            }
 
-            print(loopback.keys())
-            response += "Interface Id: {}\n".format(loopback["id"])
-            response += "Admin State: {}\n".format(loopback["adminSt"])
-            response += "Oper State: {}\n".format(loopback["lbrtdif-items"]["operSt"])
-            try:
-                response += "Description: {}\n".format(loopback["descr"])
-            except:
-                response += "Description:\n"
-
-            # Retrieve IPv4 Address for Loopback
+            # Retrieve IPv4 Addresses for Loopback
             ipv4_filter = ipv4_filter_template.format(loopback["id"])
             ipv4_response = self.device.get(filter=ipv4_filter)
             ipv4_data = xmltodict.parse(ipv4_response.xml)["rpc-reply"]["data"]
@@ -177,17 +174,17 @@ class NetconfClient:
             try:
                 ipv4_addresses = ipv4_data["System"]["ipv4-items"]["inst-items"]["dom-items"]["Dom-list"]["if-items"]["If-list"]["addr-items"]["Addr-list"]
                 # Ensure list of addresses
-                if not type(ipv4_addresses) is list:
+                if not isinstance(ipv4_addresses, list):
                     ipv4_addresses = [ipv4_addresses]
 
-                primary_ipv4_address = ipv4_addresses[0]
-
-                # Print IPv4 Address Info
-                response += "    IPv4 Address: {}\n\n".format(primary_ipv4_address["addr"])
+                # Add IPv4 Addresses Info to loopback_info
+                loopback_info['ipv4_addresses'] = [{'addr': addr.get('addr', "")} for addr in ipv4_addresses]
             except KeyError:
-                response += "     There are no IPv4 addresses configured.\n\n"
+                loopback_info['ipv4_addresses'] = []
 
-        return response
+            loopbacks_info.append(loopback_info)
+
+        return loopbacks_info
 
     # ------------<edit-config>--------------
 
@@ -352,7 +349,7 @@ if __name__ == "__main__":
 
     # print(netconf_instance.get_serial())
 
-    # print(netconf_instance.get_loopbacks())
+    print(netconf_instance.get_loopbacks())
 
     # schema = 'Cisco-NX-OS-device' 
     # print(netconf_instance.get_schema(schema,save_to_file=True))
