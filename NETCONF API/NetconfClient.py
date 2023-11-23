@@ -85,7 +85,7 @@ class NetconfClient:
             if save_to_file:
                 self._save_str_to_file(str(schema_str), file_name)
 
-            return schema
+            return schema_str
 
         except Exception as e:
             print(f"Failed to retrieve configuration. Error: {str(e)}")

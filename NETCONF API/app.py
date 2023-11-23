@@ -6,17 +6,10 @@ system_session_id = 0
 
 app = Flask(__name__)
 
-@app.route('/login', methods=['POST'])
-def login():
+@app.route('/connect', methods=['POST'])
+def connect():
     try:
         
-        #Expected JSON: 
-        # {
-        #   "host": "example.com",
-        #   "port": 830,
-        #   "username": "your_username",
-        #   "password": "your_password"
-        # }
         data = request.get_json()
         host = data.get('host')
         port = data.get('port')
@@ -80,26 +73,44 @@ def get_config(session_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# @app.route('/config')
-# def getConfig():
-#     running_config = m.get_config('running')
-#     return "nop funciono"
+@app.route('/get_capabilities/<int:session_id>', methods=['GET'])
+def get_capabilities(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
 
-# @app.route('/capabilities')
-# def getCapabilities():
-#     m = conexionConstante()
-#     capabilities = []
-#     for capability in m.server_capabilities:
-#         print('*'* 50)
-#         capabilities.append(capability)
-#         print(capability)
-#     return capabilities
+            capabilities = nc_client.get_capabilities()
+            capabilities_list = list(capabilities)
 
-# @app.route('/schema')
-# def getSchema():
-#     m = conexionConstante()
-#     schema = m.get_schema('Cisco-NX-OS-device')
-#     return "convertir de xml a json o un formato mas pequeno"
+            return jsonify({'capabilities': capabilities_list}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/get_schema/<int:session_id>', methods=['GET'])
+def get_schema(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
+
+            data = request.get_json()
+            schema = data.get('schema')
+
+            if schema is None:
+                return jsonify({'error': 'Schema not provided in the request body'}), 400
+
+            schema_data = nc_client.get_schema(schema)
+
+            return Response(str(schema_data), content_type='application/xml'), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # @app.route('/serial')
 # def getSerial():
@@ -118,21 +129,6 @@ def get_config(session_id):
 # @app.route('/loopback')
 # def getLoopback():
 #     return items
-
-# @app.route('/connect', methods=['POST'])
-# def create():
-#     print('test post', request.get_json())
-#     data = request.get_json()
-#     print(data)
-#     coneccion['username'] = data['username']
-#     coneccion['password'] = data['password']
-#     coneccion['host'] = data['host']
-#     coneccion['port'] = data['port']
-#     res = conexionConstante()
-#     if(res.connected == True):
-#         return "True"
-#     else:
-#         return 'error'
 
 # @app.route('/deleteL', methods=['POST'])
 # def deleteLoopback():
