@@ -170,7 +170,36 @@ if __name__ == "__main__":
 </config>
 """
 
-    #print(netconf_instance.get_config(save_to_file=True,filter_str=filter_str))
+
+    loopback_filter = """
+    <filter>
+        <System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device">
+            <intf-items>
+                <lb-items></lb-items>
+            </intf-items>
+        </System>
+    </filter>"""
+
+    ipv4_filter_template = """
+    <filter>
+        <System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device">
+            <ipv4-items>
+                <inst-items>
+                    <dom-items>
+                        <Dom-list>
+                            <name>default</name>
+                            <if-items>
+                                <If-list>
+                                    <id>{0}</id>
+                                </If-list>
+                            </if-items>
+                        </Dom-list>
+                    </dom-items>
+                </inst-items>
+            </ipv4-items>
+        </System>
+    </filter>"""
+    print(netconf_instance.get_config(save_to_file=True,filter_str=loopback_filter))
     #print(netconf_instance.get_config(save_to_file=True))
 
     
