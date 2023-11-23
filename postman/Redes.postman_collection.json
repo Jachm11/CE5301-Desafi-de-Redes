@@ -124,10 +124,10 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "<filter xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\"> \r\n    <interface-configurations xmlns=\"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\"/> \r\n</filter>",
+					"raw": "{\r\n  \"filter\": \"<filter xmlns=\\\"urn:ietf:params:xml:ns:netconf:base:1.0\\\"> <interface-configurations xmlns=\\\"http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg\\\"/> </filter>\",\r\n  \"target\": \"running\"\r\n}",
 					"options": {
 						"raw": {
-							"language": "xml"
+							"language": "json"
 						}
 					}
 				},
@@ -283,6 +283,38 @@
 					"port": "5000",
 					"path": [
 						"get_loopbacks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "<edit-config>",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"config\": \"<config> <System xmlns=\\\"http://cisco.com/ns/yang/cisco-nx-os-device\\\"> <intf-items> <lb-items> <LbRtdIf-list> <id>lo11</id> <adminSt>up</adminSt> <descr>Added with postman for Redes</descr> </LbRtdIf-list> </lb-items> </intf-items> <ipv4-items> <inst-items> <dom-items> <Dom-list> <name>default</name> <if-items> <If-list> <id>lo11</id> <addr-items> <Addr-list> <addr>0.0.0.0/32</addr> </Addr-list> </addr-items> </If-list> </if-items> </Dom-list> </dom-items> </inst-items> </ipv4-items> </System> </config>\",\r\n  \"target\": \"running\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/edit_config/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"edit_config",
 						"1"
 					]
 				}

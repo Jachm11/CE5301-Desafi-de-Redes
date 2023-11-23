@@ -9,7 +9,13 @@ app = Flask(__name__)
 @app.route('/connect', methods=['POST'])
 def connect():
     try:
-        
+        # Expected JSON:  
+        # { 
+        #   "host": "example.com", 
+        #   "port": 830, 
+        #   "username": "your_username", 
+        #   "password": "your_password" 
+        # } 
         data = request.get_json()
         host = data.get('host')
         port = data.get('port')
@@ -58,13 +64,24 @@ def get_config(session_id):
         if session_id in nc_clients:
             nc_client = nc_clients[session_id]
 
-            # XML filter could be on the request body
-            filter_str = request.data.decode('utf-8')
+            # Expected JSON data:
+            # {
+            #   "filter": "<get-config-filter-xml-here>",
+            #   "target": "running"  # Optional, defaults to "running"
+            # }
+            # Check if the request has a JSON payload
 
-            if filter_str == "":
+            data = request.get_json(silent=True)
+
+            # If there is no JSON payload, treat it as an empty filter
+            if data is None:
                 filter_str = None
+                target = 'running'
+            else:
+                filter_str = data.get('filter', None)
+                target = data.get('target', 'running')
 
-            config_data = nc_client.get_config(filter_str=filter_str)
+            config_data = nc_client.get_config(filter_str=filter_str, source=target)
             return Response(config_data, content_type='application/xml'), 200
 
         else:
@@ -143,10 +160,31 @@ def get_loopbacks(session_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/edit_config/<int:session_id>', methods=['PUT'])
+def edit_config(session_id):
+    try:
+        if session_id in nc_clients:
+            nc_client = nc_clients[session_id]
 
-# @app.route('/loopback')
-# def getLoopback():
-#     return items
+            # Expected JSON data:
+            # {
+            #   "config_data": "<edit-config-xml-here>",
+            #   "target": "running"  # Optional, defaults to "running"
+            # }
+            data = request.get_json()
+            config_data = data.get('config')
+            target = data.get('target', 'running')
+
+            nc_client.edit_config(config_data, target=target)
+
+            return jsonify({'message': f'Configuration edited successfully for target: {target}'}), 200
+
+        else:
+            return jsonify({'error': f'Session with ID {session_id} not found'}), 404
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # @app.route('/deleteL', methods=['POST'])
 # def deleteLoopback():
