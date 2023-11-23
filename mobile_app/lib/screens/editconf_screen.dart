@@ -59,7 +59,7 @@ class _EditconfScreenState extends State<EditconfScreen> {
               height: 100,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(getconfRouteName);
+                  Navigator.of(context).pushNamed(copyconfRouteName);
                 },
                 child: const Text(
                   'Copy Config',
@@ -72,7 +72,9 @@ class _EditconfScreenState extends State<EditconfScreen> {
               width: 300,
               height: 100,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(customEditconfRouteName);
+                },
                 child: const Text(
                   'Custom',
                   style: TextStyle(fontSize: 25),
